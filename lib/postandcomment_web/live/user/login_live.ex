@@ -2,6 +2,7 @@ defmodule PostandcommentWeb.User.LoginLive do
   alias Postandcomment.Context.Users
   use Phoenix.LiveView
   import Argon2
+  alias Postandcomment.Model.User
   alias Phoenix.Token
 
 
@@ -9,7 +10,7 @@ defmodule PostandcommentWeb.User.LoginLive do
     ~L"""
     <div class="row">
     <form phx-submit="save">
-    <input placeholder="Enter Email" type="email"  name="current_user[email]"><br><br>
+    <input placeholder="Enter Email" type="email"  name="current_user[email]" required><br><br>
     <input type="password" required name="current_user[password]" placeholder="Enter Password"><br><br>
     <ul>
     <%= for error <- @errors do %>
@@ -55,18 +56,25 @@ defmodule PostandcommentWeb.User.LoginLive do
 
 
   defp do_verify_user(%{"email" => email, "password" => password}) do
-    case Users.get_user_by_email(email) do
-      nil -> {:error, ["invalid email or password"]}
-      valid_user -> do_verify_pass(valid_user, password)
+    with %User{} = valid_user <- Users.get_user_by_email(email)
+    do
+      do_verify_pass(valid_user, password)
+    else
+      _ -> {:error, ["invalid email or password"]}
     end
   end
 
   defp do_verify_pass(user, plain_password) do
-    case verify_pass(plain_password, user.password) do
-      true -> {:ok, user}
-      _ -> {:error, ["invalid email or password"]}
+    with true <- verify_pass(plain_password, user.password),
+    true <- is_verified_user?(user)
+    do
+      {:ok, user}
+    else
+      _ -> {:error, ["Invalid email or password"]}
     end
   end
+
+  defp is_verified_user?(user), do: user.is_active
 
 
 end

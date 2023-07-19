@@ -12,6 +12,7 @@ defmodule Postandcomment.Model.User do
     field :phone_number, :string
     field :gender, :string
     field :is_active, :boolean
+    has_many :posts, Postandcomment.Model.Post
   end
 
 
@@ -19,11 +20,12 @@ defmodule Postandcomment.Model.User do
     required
     |> cast(given, [:email, :password, :phone_number, :date_of_birth, :profession, :gender, :is_active])
     |> validate_required([:email, :password, :phone_number, :date_of_birth, :profession, :gender])
-    |> validate_length(:phone_number, max: 11)
+    |> validate_length(:phone_number, min: 11, max: 11)
     |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)
     |> unique_constraint(:phone_number)
     |> add_pass_hash()
+    |> number_validation()
   end
 
 
@@ -33,6 +35,17 @@ defmodule Postandcomment.Model.User do
 
   defp add_pass_hash(changeset), do: changeset
 
+  defp number_validation(%Ecto.Changeset{valid?: true, changes: %{phone_number: phone_number}} = changeset) do
+    phone_number
+    |> String.split("", trim: true)
+    |> Enum.all?(fn char -> char >= "0" and char <= "9" end)
+    |> case do
+      true -> changeset
+      false -> %Ecto.Changeset{changeset | valid?: false}
+    end
+  end
+
+  defp number_validation(changeset), do: changeset
 
 
 end

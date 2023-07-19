@@ -22,18 +22,22 @@ defmodule PostandcommentWeb.Router do
 
   scope "/", PostandcommentWeb do
     pipe_through :browser
-    get "/", PageController, :home
+    # get "/", PageController, :home
+    live "/", Post.IndexLive
 
     live "/registration", User.SignupLive
     live "/login", User.LoginLive
 
     get "/:token/login", SessionController, :login
+    get "/:token/verify/user", EmailController, :verify
   end
 
   scope "/", PostandcommentWeb do
     pipe_through [:browser, :authenticated]
     get "/logout", SessionController, :logout
     live "/profile", User.UpdateLive
+    live "/post", Post.CreateLive
+    live "/post/:id", Comment.CreateLive
   end
 
   # Other scopes may use custom stacks.

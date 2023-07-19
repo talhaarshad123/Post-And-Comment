@@ -8,6 +8,7 @@
       <%= assigns[:page_title] || "Post and Comment" %>
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
@@ -19,6 +20,7 @@
         <ul id="nav-mobile" class="right hide-on-med-and-down">
         <%= if @conn.assigns[:user] do %>
           <li><a href="/profile"><%= @conn.assigns.user.email %></a></li>
+          <li><a href="/post">Add Post</a></li>
           <li><a href="/logout">signout</a></li>
         <% else  %>
           <li><a href="/registration">Signup</a></li>

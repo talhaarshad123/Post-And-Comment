@@ -1,16 +1,18 @@
 defmodule PostandcommentWeb.User.SignupLive do
   use Phoenix.LiveView
   alias Postandcomment.Context.Users
+  alias Postandcomment.VerifyEmail
+  alias Postandcomment.Mailer
 
 
   def render(assigns) do
     ~L"""
     <div class="">
     <form phx-submit="save">
-    <input placeholder="Enter Email" type="email"  name="current_user[email]">
-    <input placeholder="Enter Date Of Birth" type="date"  name="current_user[date_of_birth]">
-    <input placeholder="Enter Profession" type="text"  name="current_user[profession]">
-    <input placeholder="Enter Phone Number" type="text"  name="current_user[phone_number]">
+    <input placeholder="Enter Email" type="email"  name="current_user[email]" required>
+    <input placeholder="Enter Date Of Birth" type="date"  name="current_user[date_of_birth]" required>
+    <input placeholder="Enter Profession" type="text"  name="current_user[profession]" required>
+    <input placeholder="Enter Phone Number" type="text"  name="current_user[phone_number]" required>
     <input type="radio" value="male" name="current_user[gender]">
     <label for="male">Male</label>
     <input type="radio" value="female" name="current_user[gender]">
@@ -50,10 +52,16 @@ defmodule PostandcommentWeb.User.SignupLive do
     Map.put(user, "date_of_birth", dob)
     |> Users.create()
     |> case do
-      {:ok, _user} -> {:noreply, socket |> put_flash(:info, "User created") |> redirect(to: "/")}
+      {:ok, user} ->
+        do_send_email(user)
+        {:noreply, socket |> put_flash(:info, "User created. Verify Email") |> redirect(to: "/")}
       {:error, changeset} ->
         errors = changeset.errors |> Enum.map(fn {key, {msg, _}} -> to_string(key) <> " " <> msg end)
         {:noreply, socket |> assign(errors: errors)}
     end
+  end
+
+  defp do_send_email(user) do
+    VerifyEmail.verify(user) |> Mailer.deliver()
   end
 end

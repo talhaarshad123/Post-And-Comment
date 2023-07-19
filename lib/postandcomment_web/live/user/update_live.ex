@@ -2,7 +2,6 @@ defmodule PostandcommentWeb.User.UpdateLive do
   use Phoenix.LiveView
   alias Phoenix.Token
   alias Postandcomment.Context.Users
-  alias Postandcomment.Model.User
 
   def render(assigns) do
     # <input placeholder="Enter DOB" type="date"  name="current_user[date_of_birth]" value="<%= @current_user.date_of_birth.year %>-09-<%= @current_user.date_of_birth.day %>">
@@ -49,7 +48,7 @@ defmodule PostandcommentWeb.User.UpdateLive do
     # updated_user = Map.put(updated_user, "date_of_birth", Date.new(updated_year, updated_month, updated_day))
     current_user = socket.assigns.current_user
     case Users.update(current_user, updated_user) do
-      {:ok, updated_user} -> {:noreply, socket |> put_flash(:info, "UPDATED") |> redirect(to: "/")}
+      {:ok, _updated_user} -> {:noreply, socket |> put_flash(:info, "UPDATED") |> redirect(to: "/")}
       {:error, changeset} ->
         errors = Enum.map(changeset.errors, fn {key, {msg, _}} -> "#{key} #{msg}" end)
       {:noreply, socket |> assign(errors: errors) }

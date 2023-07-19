@@ -11,7 +11,7 @@ defmodule PostandcommentWeb.SessionController do
   end
 
   def logout(conn, _params) do
-    clear_session(conn)
+    conn
     |> configure_session(drop: true)
     |> put_flash(:info, "Loged out")
     |> redirect(to: "/login")
