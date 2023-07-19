@@ -8,6 +8,12 @@ defmodule PostandcommentWeb.Router do
     plug :put_root_layout, html: {PostandcommentWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug PostandcommentWeb.Plugs.SetUser
+  end
+
+
+  pipeline :authenticated do
+    plug PostandcommentWeb.Plugs.RequireAuth
   end
 
   pipeline :api do
@@ -16,8 +22,18 @@ defmodule PostandcommentWeb.Router do
 
   scope "/", PostandcommentWeb do
     pipe_through :browser
-
     get "/", PageController, :home
+
+    live "/registration", User.SignupLive
+    live "/login", User.LoginLive
+
+    get "/:token/login", SessionController, :login
+  end
+
+  scope "/", PostandcommentWeb do
+    pipe_through [:browser, :authenticated]
+    get "/logout", SessionController, :logout
+    live "/profile", User.UpdateLive
   end
 
   # Other scopes may use custom stacks.
