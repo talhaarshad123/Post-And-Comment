@@ -13,6 +13,8 @@ defmodule Postandcomment.Model.User do
     field :gender, :string
     field :is_active, :boolean
     has_many :posts, Postandcomment.Model.Post
+    has_many :comments, Postandcomment.Model.Comment
+    has_many :replies, Postandcomment.Model.Reply
   end
 
 

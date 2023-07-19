@@ -32,7 +32,6 @@ defmodule PostandcommentWeb.Post.CreateLive do
   end
 
   def handle_event("save", %{"post" => post}, socket) do
-    IO.inspect(socket, label: "SOCKET")
     case Posts.create(post, socket.assigns.uid) do
       {:ok, new_post} ->
         PubSub.broadcast(Postandcomment.PubSub, "post", {:post, new_post})

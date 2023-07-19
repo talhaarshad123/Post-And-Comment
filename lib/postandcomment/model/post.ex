@@ -6,6 +6,7 @@ defmodule Postandcomment.Model.Post do
     field :title, :string
     field :description, :string
     belongs_to :user, Postandcomment.Model.User
+    has_many :comments, Postandcomment.Model.Comment
   end
 
 

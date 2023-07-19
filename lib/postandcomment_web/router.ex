@@ -38,6 +38,7 @@ defmodule PostandcommentWeb.Router do
     live "/profile", User.UpdateLive
     live "/post", Post.CreateLive
     live "/post/:id", Comment.CreateLive
+    live "/post/comment/:id", Reply.CreateLive
   end
 
   # Other scopes may use custom stacks.
