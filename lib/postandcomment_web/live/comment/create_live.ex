@@ -31,7 +31,7 @@ defmodule PostandcommentWeb.Comment.CreateLive do
     do
       Phoenix.PubSub.subscribe(Postandcomment.PubSub, "post:#{post_id}")
       {:ok, pid} = GenServer.start_link(HandleComments, post_id)
-      comments_by_post = GenServer.call(pid, {:get_comments})
+      comments_by_post = GenServer.call(pid, :get_comments)
       {:ok, socket |> assign(post: comments_by_post, uid: uid, errors: [], pid: pid)}
     else
       _error -> {:ok, socket |> put_flash(:error, "NOT ALLOWED") |> redirect(to: "/")}
@@ -52,7 +52,7 @@ defmodule PostandcommentWeb.Comment.CreateLive do
 
   def handle_info({:comment, new_comment}, %Phoenix.LiveView.Socket{assigns: %{pid: pid}} = socket) do
     GenServer.cast(pid, {:add_comment, new_comment})
-    comments_by_post = GenServer.call(pid, {:get_comnnets})
+    comments_by_post = GenServer.call(pid, :get_comnnets)
     {:noreply, socket |> assign(post: comments_by_post)}
   end
 end
