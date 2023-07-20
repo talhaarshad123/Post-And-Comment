@@ -1,6 +1,8 @@
 defmodule PostandcommentWeb.Comment.CreateLive do
   use Phoenix.LiveView
   alias Postandcomment.Context.Comments
+  alias Postandcomment.Context.Posts
+  alias PostandcommentWeb.Comment.HandleComments
   alias Phoenix.Token
 
 
@@ -24,11 +26,13 @@ defmodule PostandcommentWeb.Comment.CreateLive do
 
   def mount(%{"id" => id}, %{"auth_key" => token}, socket) do
     with {post_id, _}  <- Integer.parse(id),
+    %Postandcomment.Model.Post{} = _post <- Posts.get_by_id(post_id),
     {:ok, uid} <- Token.verify(PostandcommentWeb.Endpoint, "somekey", token, max_age: 10800)
     do
       Phoenix.PubSub.subscribe(Postandcomment.PubSub, "post:#{post_id}")
-      comments_by_post = Comments.get_all_by(post_id)
-      {:ok, socket |> assign(post: comments_by_post, uid: uid, errors: [])}
+      {:ok, pid} = GenServer.start_link(HandleComments, post_id)
+      comments_by_post = GenServer.call(pid, {:get_comments})
+      {:ok, socket |> assign(post: comments_by_post, uid: uid, errors: [], pid: pid)}
     else
       _error -> {:ok, socket |> put_flash(:error, "NOT ALLOWED") |> redirect(to: "/")}
     end
@@ -46,8 +50,9 @@ defmodule PostandcommentWeb.Comment.CreateLive do
     end
   end
 
-  def handle_info({:comment, new_comment}, socket) do
-    comments_by_post = Comments.get_all_by(new_comment.post_id)
+  def handle_info({:comment, new_comment}, %Phoenix.LiveView.Socket{assigns: %{pid: pid}} = socket) do
+    GenServer.cast(pid, {:add_comment, new_comment})
+    comments_by_post = GenServer.call(pid, {:get_comnnets})
     {:noreply, socket |> assign(post: comments_by_post)}
   end
 end

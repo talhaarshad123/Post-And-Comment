@@ -14,15 +14,31 @@ defmodule PostandcommentWeb.User.UpdateLive do
     <input placeholder="Enter Profession" type="text"  name="current_user[profession]" value="<%= @current_user.profession %>">
     <input placeholder="Enter Phone Number" type="text"  name="current_user[phone_number]" value="<%= @current_user.phone_number %>">
     <%= if @current_user.gender === "male" do %>
-      <input type="radio" value="male" name="current_user[gender]" checked>
-      <label for="male">Male</label>
-      <input type="radio" value="female" name="current_user[gender]">
-      <label for="female">Female</label>
+      <p>
+        <label>
+          <input type="radio" value="male" name="current_user[gender]" checked>
+          <span>Male</span>
+        </label>
+      </p>
+      <p>
+        <label>
+          <input type="radio" value="female" name="current_user[gender]">
+          <span>Female</span>
+        </label>
+      </p>
     <% else %>
-      <input type="radio" value="male" name="current_user[gender]">
-      <label for="male">Male</label>
-      <input type="radio" value="female" name="current_user[gender]" checked>
-      <label for="female">Female</label>
+      <p>
+        <label>
+          <input type="radio" value="male" name="current_user[gender]">
+          <span>Male</span>
+        </label>
+      </p>
+      <p>
+        <label>
+          <input type="radio" value="female" name="current_user[gender]" checked>
+          <span>Female</span>
+        </label>
+      </p>
     <% end %>
 
     <ul>

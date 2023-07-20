@@ -7,6 +7,8 @@ defmodule Postandcomment.Model.Comment do
     belongs_to :user, Postandcomment.Model.User
     belongs_to :post, Postandcomment.Model.Post
     has_many :replies, Postandcomment.Model.Reply
+
+    timestamps()
   end
 
 
