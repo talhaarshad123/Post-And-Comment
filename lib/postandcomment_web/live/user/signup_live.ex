@@ -13,10 +13,18 @@ defmodule PostandcommentWeb.User.SignupLive do
     <input placeholder="Enter Date Of Birth" type="date"  name="current_user[date_of_birth]" required>
     <input placeholder="Enter Profession" type="text"  name="current_user[profession]" required>
     <input placeholder="Enter Phone Number" type="text"  name="current_user[phone_number]" required>
-    <input type="radio" value="male" name="current_user[gender]">
-    <label for="male">Male</label>
-    <input type="radio" value="female" name="current_user[gender]">
-    <label for="female">Female</label>
+    <p>
+      <label>
+        <input type="radio" value="male" name="current_user[gender]">
+        <span>Male</span>
+      </label>
+    </p>
+    <p>
+      <label>
+        <input type="radio" value="female" name="current_user[gender]">
+        <span>Female</span>
+      </label>
+    </p>
     <input type="password" required name="current_user[password]" placeholder="Enter Password"><br><br>
     <ul>
     <%= for error <- @errors do %>
@@ -53,7 +61,7 @@ defmodule PostandcommentWeb.User.SignupLive do
     |> Users.create()
     |> case do
       {:ok, user} ->
-        do_send_email(user)
+        spawn(fn -> do_send_email(user) end)
         {:noreply, socket |> put_flash(:info, "User created. Verify Email") |> redirect(to: "/")}
       {:error, changeset} ->
         errors = changeset.errors |> Enum.map(fn {key, {msg, _}} -> to_string(key) <> " " <> msg end)
