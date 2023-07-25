@@ -2,29 +2,31 @@ defmodule PostandcommentWeb.Post.IndexLive do
   use Phoenix.LiveView
   alias Postandcomment.Context.Posts
   alias Phoenix.PubSub
+  alias Phoenix.Token
 
 
   def render(assigns) do
     ~L"""
-    <%= if length(Map.keys(@flash)) > 0 do %>
-      <div class="mx-auto max-w-2xl">
-        <%= for {_key, value} <- @flash do %>
-          <%= value %>
-        <% end %>
-      </div>
-    <% end %>
+    <div id="info"><%= Phoenix.Flash.get(@flash, :info)%></div>
+    <div id="error"><%= Phoenix.Flash.get(@flash, :error)%></div>
     <ul class="collection">
       <%= for post <- @posts do %>
-      <li class="collection-item"> <a href="/post/<%= post.id %>"><%= post.title %></a> </li>
+        <li class="collection-item"> <a href="/post/<%= post.id %>"><%= post.title %></a> </li>
       <% end %>
     </ul>
     """
   end
 
-  def mount(_, %{"auth_key" => _token}, socket) do
-    PubSub.subscribe(Postandcomment.PubSub, "post")
-    posts = Posts.all_posts()
-    {:ok, socket |> assign(posts: posts)}
+  def mount(_, %{"auth_key" => token}, socket) do
+    case Token.verify(PostandcommentWeb.Endpoint, "somekey", token, max_age: 10800) do
+      {:ok, _user_id} ->
+        PubSub.subscribe(Postandcomment.PubSub, "post")
+        posts = Posts.all_posts()
+        {:ok, socket |> assign(posts: posts)}
+      {:error, _} ->
+        posts = Posts.all_posts()
+        {:ok, socket |> assign(posts: posts)}
+    end
   end
 
   def mount(_, _, socket) do

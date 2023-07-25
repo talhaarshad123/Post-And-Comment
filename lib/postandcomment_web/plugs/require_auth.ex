@@ -10,7 +10,7 @@ defmodule PostandcommentWeb.Plugs.RequireAuth do
    if conn.assigns[:user] do
     conn
    else
-    conn |> put_flash(:error, "login require") |> redirect(to: "/") |> halt()
+    conn |> put_flash(:error, "login require") |> redirect(to: "/login") |> halt()
    end
   end
 end

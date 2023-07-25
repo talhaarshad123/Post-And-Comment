@@ -4,17 +4,13 @@ defmodule PostandcommentWeb.User.LoginLive do
   import Argon2
   alias Postandcomment.Model.User
   alias Phoenix.Token
+  alias Phoenix.Flash
 
 
   def render(assigns) do
     ~L"""
-    <%= if length(Map.keys(@flash)) > 0 do %>
-      <div class="mx-auto max-w-2xl">
-        <%= for {_key, value} <- @flash do %>
-          <%= value %>
-        <% end %>
-      </div>
-    <% end %>
+    <div id="info"><%= Flash.get(@flash, :info)%></div>
+    <div id="error"><%= Flash.get(@flash, :error)%></div>
     <div class="row">
     <form phx-submit="save">
     <input placeholder="Enter Email" type="email"  name="current_user[email]" required><br><br>

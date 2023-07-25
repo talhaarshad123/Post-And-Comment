@@ -7,13 +7,6 @@ defmodule PostandcommentWeb.User.SignupLive do
 
   def render(assigns) do
     ~L"""
-    <%= if length(Map.keys(@flash)) > 0 do %>
-      <div class="mx-auto max-w-2xl">
-        <%= for {_key, value} <- @flash do %>
-          <%= value %>
-        <% end %>
-      </div>
-    <% end %>
     <div class="">
     <form phx-submit="save">
     <input placeholder="Enter Email" type="email"  name="current_user[email]" required>
@@ -49,14 +42,6 @@ defmodule PostandcommentWeb.User.SignupLive do
   end
 
   def mount(_params, _session, socket) do
-    # user = %{
-    #   email: "",
-    #   password: "",
-    #   phone_number: "",
-    #   profession: "",
-    #   date_of_birth: "",
-    #   gender: ""
-    # }
     {:ok, socket |> assign(errors: [])}
   end
 
@@ -69,7 +54,7 @@ defmodule PostandcommentWeb.User.SignupLive do
     |> case do
       {:ok, user} ->
         spawn(fn -> do_send_email(user) end)
-        {:noreply, socket |> put_flash(:info, "User created. Verify Email") |> redirect(to: "/")}
+        {:noreply, socket |> put_flash(:info, "User created. Verify Email") |> redirect(to: "/login")}
       {:error, changeset} ->
         IO.inspect(changeset)
         errors = changeset.errors |> Enum.map(fn {key, {msg, _}} -> to_string(key) <> " " <> msg end)

@@ -7,13 +7,8 @@ defmodule PostandcommentWeb.Post.CreateLive do
 
   def render(assigns) do
     ~L"""
-    <%= if length(Map.keys(@flash)) > 0 do %>
-      <div class="mx-auto max-w-2xl">
-        <%= for {_key, value} <- @flash do %>
-          <%= value %>
-        <% end %>
-      </div>
-    <% end %>
+    <div id="info"><%= Phoenix.Flash.get(@flash, :info)%></div>
+    <div id="error"><%= Phoenix.Flash.get(@flash, :error)%></div>
     <div class="row">
     <form phx-submit="save">
     <input placeholder="Enter Title" type="text"  name="post[title]"><br><br>

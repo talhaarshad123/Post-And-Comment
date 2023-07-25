@@ -4,17 +4,13 @@ defmodule PostandcommentWeb.Comment.CreateLive do
   alias Postandcomment.Context.Posts
   alias PostandcommentWeb.Comment.HandleComments
   alias Phoenix.Token
+  alias Phoenix.Flash
 
 
   def render(assigns) do
     ~L"""
-    <%= if length(Map.keys(@flash)) > 0 do %>
-      <div class="mx-auto max-w-2xl">
-        <%= for {_key, value} <- @flash do %>
-          <%= value %>
-        <% end %>
-      </div>
-    <% end %>
+    <div id="info"><%= Flash.get(@flash, :info)%></div>
+    <div id="error"><%= Flash.get(@flash, :error)%></div>
     <h3><%= @post.title %></h3>
     <form phx-submit="save">
       <input type="text" placeholder="Enter Comment" name="comment[content]" required>
@@ -41,7 +37,7 @@ defmodule PostandcommentWeb.Comment.CreateLive do
       comments_by_post = GenServer.call(pid, :get_comments)
       {:ok, socket |> assign(post: comments_by_post, uid: uid, errors: [], pid: pid)}
     else
-      _error -> {:ok, socket |> put_flash(:error, "NOT ALLOWED") |> redirect(to: "/")}
+      _error -> {:ok, socket |> put_flash(:error, "NOT ALLOWED") |> redirect(to: "/login")}
     end
   end
 

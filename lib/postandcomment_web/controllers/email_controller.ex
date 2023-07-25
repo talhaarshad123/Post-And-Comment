@@ -5,13 +5,13 @@ defmodule PostandcommentWeb.EmailController do
   alias Phoenix.Token
 
   def verify(conn, %{"token" => token}) do
-    with {:ok, uid} <- Token.verify(PostandcommentWeb.Endpoint, "somekey", token, max_age: 10800),
-    %User{} = user <- Users.get_user_by_id(uid)
+    with {:ok, uid} <- Token.verify(PostandcommentWeb.Endpoint, "somekey", token, max_age: 3600),
+    %User{is_active: false} = user <- Users.get_user_by_id(uid)
     do
       {:ok, _verified_user} = Users.update(user, %{"is_active" => true})
-      conn |> put_flash(:info, "Email Verified") |> redirect(to: "/")
+      conn |> put_flash(:info, "Email Verified") |> redirect(to: "/login")
     else
-      _ -> conn |> put_flash(:error, "NOT ALLOWED") |> redirect(to: "/")
+      _ -> conn |> put_flash(:error, "Not Allowed") |> redirect(to: "/login")
     end
   end
 end
