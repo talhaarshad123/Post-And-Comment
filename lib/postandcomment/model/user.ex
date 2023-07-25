@@ -22,7 +22,7 @@ defmodule Postandcomment.Model.User do
     required
     |> cast(given, [:email, :password, :phone_number, :date_of_birth, :profession, :gender, :is_active])
     |> validate_required([:email, :password, :phone_number, :date_of_birth, :profession, :gender])
-    |> validate_length(:phone_number, min: 11, max: 11)
+    |> validate_length(:phone_number,is: 11, message: "should be 11 character(s)")
     |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)
     |> unique_constraint(:phone_number)
@@ -43,7 +43,7 @@ defmodule Postandcomment.Model.User do
     |> Enum.all?(fn char -> char >= "0" and char <= "9" end)
     |> case do
       true -> changeset
-      false -> %Ecto.Changeset{changeset | valid?: false}
+      false -> %Ecto.Changeset{changeset | valid?: false, errors: [{:phone_number, {"All letters must be between 0-9", []}} | changeset.errors]}
     end
   end
 

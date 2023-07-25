@@ -7,6 +7,13 @@ defmodule PostandcommentWeb.Post.CreateLive do
 
   def render(assigns) do
     ~L"""
+    <%= if length(Map.keys(@flash)) > 0 do %>
+      <div class="mx-auto max-w-2xl">
+        <%= for {_key, value} <- @flash do %>
+          <%= value %>
+        <% end %>
+      </div>
+    <% end %>
     <div class="row">
     <form phx-submit="save">
     <input placeholder="Enter Title" type="text"  name="post[title]"><br><br>
@@ -24,11 +31,7 @@ defmodule PostandcommentWeb.Post.CreateLive do
 
   def mount(_, %{"auth_key" => token}, socket) do
     {:ok, uid} = Token.verify(PostandcommentWeb.Endpoint, "somekey", token, max_age: 10800)
-    post = %{
-      title: "",
-      description: ""
-    }
-    {:ok, socket |> assign(uid: uid, post: post, errors: [])}
+    {:ok, socket |> assign(uid: uid, errors: [])}
   end
 
   def handle_event("save", %{"post" => post}, socket) do

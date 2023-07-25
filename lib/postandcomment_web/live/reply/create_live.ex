@@ -6,6 +6,13 @@ defmodule PostandcommentWeb.Reply.CreateLive do
 
   def render(assigns) do
     ~L"""
+    <%= if length(Map.keys(@flash)) > 0 do %>
+      <div class="mx-auto max-w-2xl">
+        <%= for {_key, value} <- @flash do %>
+          <%= value %>
+        <% end %>
+      </div>
+    <% end %>
     <h3><%= @replies.content %></h3>
     <form phx-submit="save">
       <input placeholder="Enter Reply" required name="reply[content]" type="text">

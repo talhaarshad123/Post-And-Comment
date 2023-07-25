@@ -8,6 +8,13 @@ defmodule PostandcommentWeb.Comment.CreateLive do
 
   def render(assigns) do
     ~L"""
+    <%= if length(Map.keys(@flash)) > 0 do %>
+      <div class="mx-auto max-w-2xl">
+        <%= for {_key, value} <- @flash do %>
+          <%= value %>
+        <% end %>
+      </div>
+    <% end %>
     <h3><%= @post.title %></h3>
     <form phx-submit="save">
       <input type="text" placeholder="Enter Comment" name="comment[content]" required>

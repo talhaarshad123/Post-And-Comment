@@ -6,6 +6,13 @@ defmodule PostandcommentWeb.Post.IndexLive do
 
   def render(assigns) do
     ~L"""
+    <%= if length(Map.keys(@flash)) > 0 do %>
+      <div class="mx-auto max-w-2xl">
+        <%= for {_key, value} <- @flash do %>
+          <%= value %>
+        <% end %>
+      </div>
+    <% end %>
     <ul class="collection">
       <%= for post <- @posts do %>
       <li class="collection-item"> <a href="/post/<%= post.id %>"><%= post.title %></a> </li>

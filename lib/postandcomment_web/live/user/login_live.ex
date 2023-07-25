@@ -8,6 +8,13 @@ defmodule PostandcommentWeb.User.LoginLive do
 
   def render(assigns) do
     ~L"""
+    <%= if length(Map.keys(@flash)) > 0 do %>
+      <div class="mx-auto max-w-2xl">
+        <%= for {_key, value} <- @flash do %>
+          <%= value %>
+        <% end %>
+      </div>
+    <% end %>
     <div class="row">
     <form phx-submit="save">
     <input placeholder="Enter Email" type="email"  name="current_user[email]" required><br><br>
@@ -24,25 +31,14 @@ defmodule PostandcommentWeb.User.LoginLive do
   end
 
   def mount(_params, %{"auth_key" => key}, socket) do
-    case Token.verify(PostandcommentWeb.Endpoint, "somekey", key, max_age: 10800) do
-      {:ok, _user_id} ->
-        {:ok, socket |> redirect(to: "/")}
-      {:error, _reason} ->
-        user = %{
-          email: "",
-          password: ""
-        }
-        {:ok, socket |> assign(current_user: user, errors: [])}
+    with {:ok, _user_id} <- Token.verify(PostandcommentWeb.Endpoint, "somekey", key, max_age: 10800) do
+      {:ok, socket |> put_flash(:error, "NOT ALLOWED") |> redirect(to: "/")}
     end
 
   end
 
   def mount(_params, _session, socket) do
-    user = %{
-      email: "",
-      password: ""
-    }
-    {:ok, socket |> assign(current_user: user, errors: [])}
+    {:ok, socket |> assign(errors: [])}
   end
 
   def handle_event("save", %{"current_user" => user}, socket) do
@@ -70,7 +66,7 @@ defmodule PostandcommentWeb.User.LoginLive do
     do
       {:ok, user}
     else
-      _ -> {:error, ["Invalid email or password"]}
+      _ -> {:error, ["Please Verify Your Email"]}
     end
   end
 
