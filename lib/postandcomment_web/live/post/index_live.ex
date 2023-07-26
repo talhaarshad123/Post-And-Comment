@@ -6,9 +6,9 @@ defmodule PostandcommentWeb.Post.IndexLive do
 
 
   def render(assigns) do
+
     ~L"""
-    <div id="info"><%= Phoenix.Flash.get(@flash, :info)%></div>
-    <div id="error"><%= Phoenix.Flash.get(@flash, :error)%></div>
+    <%= PostandcommentWeb.HandleFlash.render(assigns) %>
     <ul class="collection">
       <%= for post <- @posts do %>
         <li class="collection-item"> <a href="/post/<%= post.id %>"><%= post.title %></a> </li>

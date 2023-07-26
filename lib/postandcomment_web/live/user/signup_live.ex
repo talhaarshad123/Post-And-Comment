@@ -7,34 +7,68 @@ defmodule PostandcommentWeb.User.SignupLive do
 
   def render(assigns) do
     ~L"""
-    <div class="">
     <form phx-submit="save">
-    <input placeholder="Enter Email" type="email"  name="current_user[email]" required>
-    <input placeholder="Enter Date Of Birth" type="date"  name="current_user[date_of_birth]" required>
-    <input placeholder="Enter Profession" type="text"  name="current_user[profession]" required>
-    <input placeholder="Enter Phone Number" type="text"  name="current_user[phone_number]" required>
-    <p>
-      <label>
-        <input type="radio" value="male" name="current_user[gender]">
-        <span>Male</span>
-      </label>
-    </p>
-    <p>
-      <label>
-        <input type="radio" value="female" name="current_user[gender]">
-        <span>Female</span>
-      </label>
-    </p>
-    <input type="password" required name="current_user[password]" placeholder="Enter Password"><br><br>
-    <%= for error <- @errors do %>
-      <div class="flex justify-start text-gray-700 rounded-md px-2 py-2 my-2">
-        <span class="bg-gray-400 h-2 w-2 m-2 rounded-full"></span>
-        <div class="flex-grow font-medium px-2"><%= error %></div>
+      <div class="bg-grey-lighter min-h-screen flex flex-col">
+        <div class="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
+          <div class="bg-white px-6 py-8 rounded shadow-md text-black w-full">
+            <h1 class="mb-8 text-3xl text-center">Sign up</h1>
+              <input
+              type="email"
+              class="block border border-grey-light w-full p-3 rounded mb-4"
+              name="current_user[email]" required
+              placeholder="Email" />
+
+              <input
+              type="text"
+              class="block border border-grey-light w-full p-3 rounded mb-4"
+              name="current_user[profession]" required
+              placeholder="Profession" />
+              <input
+              type="text"
+              class="block border border-grey-light w-full p-3 rounded mb-4"
+              name="current_user[phone_number]" required
+              placeholder="Phone Number" />
+
+              <input
+              type="date"
+              class="block border border-grey-light w-full p-3 rounded mb-4"
+              name="current_user[date_of_birth]" required
+              placeholder="Date Of Birth" />
+
+              <p>
+                <label>
+                  <input type="radio" value="male" name="current_user[gender]">
+                  <span>Male</span>
+                </label>
+              </p>
+              <p>
+                <label>
+                  <input type="radio" value="female" name="current_user[gender]">
+                  <span>Female</span>
+                </label>
+              </p>
+
+              <input
+              type="password"
+              class="block border border-grey-light w-full p-3 rounded mb-4"
+              name="current_user[password]" required
+              placeholder="Password" />
+              <%= PostandcommentWeb.HandleError.render(assigns) %>
+              <button
+                type="submit"
+                class="btn btn--primary center w-full"
+              >Create Account</button>
+          </div>
+
+          <div class="text-grey-dark mt-6">
+              Already have an account?
+              <a class="no-underline border-b border-blue text-blue" href="/login">
+                Log in
+              </a>.
+          </div>
+        </div>
       </div>
-    <% end %>
-    <button type="submit" class="btn btn--primary">Signup</button>
     </form>
-    </div>
     """
   end
 

@@ -7,8 +7,6 @@ defmodule PostandcommentWeb.User.UpdateLive do
     ~L"""
     <div class="">
     <form phx-submit="save">
-
-
     <input placeholder="Enter Profession" type="text"  name="current_user[profession]" value="<%= @current_user.profession %>">
     <input placeholder="Enter Phone Number" type="text"  name="current_user[phone_number]" value="<%= @current_user.phone_number %>">
     <%= if @current_user.gender === "male" do %>
@@ -38,12 +36,7 @@ defmodule PostandcommentWeb.User.UpdateLive do
         </label>
       </p>
     <% end %>
-    <%= for error <- @errors do %>
-      <div class="flex justify-start text-gray-700 rounded-md px-2 py-2 my-2">
-        <span class="bg-gray-400 h-2 w-2 m-2 rounded-full"></span>
-        <div class="flex-grow font-medium px-2"><%= error %></div>
-      </div>
-    <% end %>
+    <%= PostandcommentWeb.HandleError.render(assigns) %>
     <button type="submit" class="btn btn--primary">Update</button>
     </form>
     </div>

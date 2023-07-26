@@ -11,12 +11,7 @@ defmodule PostandcommentWeb.Reply.CreateLive do
     <h3><%= @replies.content %></h3>
     <form phx-submit="save">
       <input placeholder="Enter Reply" required name="reply[content]" type="text">
-      <%= for error <- @errors do %>
-        <div class="flex justify-start text-gray-700 rounded-md px-2 py-2 my-2">
-          <span class="bg-gray-400 h-2 w-2 m-2 rounded-full"></span>
-          <div class="flex-grow font-medium px-2"><%= error %></div>
-        </div>
-      <% end %>
+      <%= PostandcommentWeb.HandleError.render(assigns) %>
       <button type="submit" class="btn btn--primary">Reply</button>
     </form>
     <ul class="collection">
