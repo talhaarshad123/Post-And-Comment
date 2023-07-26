@@ -16,6 +16,7 @@ defmodule Postandcomment.Model.Comment do
     required
     |> cast(given, [:content])
     |> validate_required([:content])
+    |> validate_length(:content, max: 255, message: "should be at most 255 character(s)")
   end
 
 end

@@ -15,9 +15,12 @@ defmodule PostandcommentWeb.Comment.CreateLive do
     <form phx-submit="save">
       <input type="text" placeholder="Enter Comment" name="comment[content]" required>
       <%= for error <- @errors do %>
-        <%= error %>
+        <div class="flex justify-start text-gray-700 rounded-md px-2 py-2 my-2">
+          <span class="bg-gray-400 h-2 w-2 m-2 rounded-full"></span>
+          <div class="flex-grow font-medium px-2"><%= error %></div>
+        </div>
       <% end %>
-      <button type="submit">Submit</button>
+      <button type="submit" class="btn btn--primary">Comment</button>
     </form>
     <ul class="collection">
       <%= for comment <- @post.comments do %>

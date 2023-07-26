@@ -9,18 +9,25 @@ defmodule PostandcommentWeb.Post.CreateLive do
     ~L"""
     <div id="info"><%= Phoenix.Flash.get(@flash, :info)%></div>
     <div id="error"><%= Phoenix.Flash.get(@flash, :error)%></div>
-    <div class="row">
     <form phx-submit="save">
-    <input placeholder="Enter Title" type="text"  name="post[title]"><br><br>
-    <input type="text" required name="post[description]" placeholder="Enter Description"><br><br>
-    <ul>
-    <%= for error <- @errors do %>
-    <li><%= error %></li>
-    <% end %>
-    </ul>
-    <button type="submit">Submit</button>
+      <div class="heading text-center font-bold text-2xl m-5 text-gray-800">New Post</div>
+      <style>
+        body {background:white !important;}
+      </style>
+      <div class="editor mx-auto w-10/12 flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg max-w-2xl">
+        <input class="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" placeholder="Title" type="text" name="post[title]">
+        <textarea class="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none" spellcheck="false" placeholder="Describe everything about this post here" name="post[description]"></textarea>
+        <%= for error <- @errors do %>
+          <div class="flex justify-start text-gray-700 rounded-md px-2 py-2 my-2">
+            <span class="bg-gray-400 h-2 w-2 m-2 rounded-full"></span>
+            <div class="flex-grow font-medium px-2"><%= error %></div>
+          </div>
+        <% end %>
+        <div class="buttons flex">
+          <button tye="submit" class="btn border border-indigo-500 p-1 px-4 font-semibold cursor-pointer text-gray-200 ml-2 bg-indigo-500">Post</button>
+        </div>
+      </div>
     </form>
-    </div>
     """
   end
 

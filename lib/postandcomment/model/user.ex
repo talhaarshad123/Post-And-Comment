@@ -26,6 +26,7 @@ defmodule Postandcomment.Model.User do
     |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)
     |> unique_constraint(:phone_number)
+    |> validate_length(:profession, max: 255, message: "should be at most 255 character(s)")
     |> add_pass_hash()
     |> number_validation()
   end

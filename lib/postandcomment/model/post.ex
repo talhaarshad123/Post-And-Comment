@@ -14,8 +14,8 @@ defmodule Postandcomment.Model.Post do
     required
     |> cast(given, [:title, :description])
     |> validate_required([:title, :description])
-    |> validate_length(:title, max: 255)
-    |> validate_length(:description, max: 255)
+    |> validate_length(:title, max: 255, message: "should be at most 255 character(s)")
+    |> validate_length(:description, max: 255, message: "should be at most 255 character(s)")
   end
 
 end

@@ -12,9 +12,12 @@ defmodule PostandcommentWeb.Reply.CreateLive do
     <form phx-submit="save">
       <input placeholder="Enter Reply" required name="reply[content]" type="text">
       <%= for error <- @errors do %>
-        <%= error %>
+        <div class="flex justify-start text-gray-700 rounded-md px-2 py-2 my-2">
+          <span class="bg-gray-400 h-2 w-2 m-2 rounded-full"></span>
+          <div class="flex-grow font-medium px-2"><%= error %></div>
+        </div>
       <% end %>
-      <button type="submit">Submit</button>
+      <button type="submit" class="btn btn--primary">Reply</button>
     </form>
     <ul class="collection">
       <%= for reply <- @replies.replies do %>
@@ -41,7 +44,7 @@ defmodule PostandcommentWeb.Reply.CreateLive do
       {:ok, new_reply} ->
         Phoenix.PubSub.broadcast(Postandcomment.PubSub, "comment:#{new_reply.comment_id}", {:reply, new_reply})
         replies = Replies.get_by_comment_id(new_reply.comment_id)
-        {:noreply, socket |> assign(replies: replies)}
+        {:noreply, socket |> put_flash(:info, "ADDED") |> assign(replies: replies)}
       {:error, changeset} ->
         errors = changeset.errors |> Enum.map(fn {key, {msg, _}} -> "#{key} #{msg}" end)
         {:noreply, socket |> assign(errors: errors)}
